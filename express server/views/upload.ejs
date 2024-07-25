@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/contactStyles.css">
+    <link rel="shortcut icon" type="image/jpeg" href="img/prostate-icon-1.png">
+    <title>Register</title>
+</head>
+<body>
+    <div class="heading" style="text-align: center;">
+        <h2 class="heading-secondary"> Upload MRI images for scanning. </h2>
+    </div>
+
+    <% if (messages.error && messages.error.length > 0) { %>
+        <div class="flash-error">
+          <% messages.error.forEach(function(error) { %>
+            <p><%= error %></p>
+          <% }); %>
+        </div>
+      <% } %>
+    <form class="patient" method="post" action="/scan" enctype="multipart/form-data">
+        <div class="uploadimage">
+            <p>Drag and drop files here. Ensure the folder zipFile format.</p>
+            <input type="file" class="image_input" id="image1" name="zipFile" style="display: block;" multiple required accept=".zip">
+            <label for="image1" class="form_label">Upload a zipped folder containing T1, T2, ADC folders</label>
+        </div>
+        <div class="patient__group">
+            <div class="patient__form">
+                <div class="patient_group">
+                    <input type="text" class="form_input" placeholder="Patient name" id="name" name="patientName" required autocomplete="on">
+                </div>
+                <div class="patient_group">
+                    <input type="number" class="form_input" placeholder="Patient ID" id="id" name="patientID" required>
+                </div>
+                <div class="patient_group">
+                    <select name="gender" id="gender" class="form_input" placeholder="Gender" id="gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="non-binary">Non-Binary</option>
+                    </select>
+                    <!-- <input type="text" class="form_input" placeholder="Gender" id="gender" required autocomplete="on"> -->
+                </div>
+                <div class="patient_group">
+                    <input type="date" class="form_input" placeholder="Date of birth(mm/dd/yy)" id="birthdate" name="birthDate" required>
+                </div>
+                <button type="submit" class="btn-scan btn--white btn--animated">Scan</button>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/contactStyles.css">
+    <link rel="shortcut icon" type="image/jpeg" href="img/prostate-icon-1.png">
+    <title>Register</title>
+</head>
+<body>
+    <% if (messages.error && messages.error.length > 0) { %>
+        <div class="flash-error">
+          <% messages.error.forEach(function(error) { %>
+            <p><%= error %></p>
+          <% }); %>
+        </div>
+      <% } %>
+    <form class="contact" method="post" action="/signup">
+        <div class="contact__group">
+            <div class="contact__form">
+                <h2 class="heading-secondary">
+                    ProstatEx AI
+                </h2>
+                <div class="form_group">
+                    <input type="text" class="form_input" placeholder="First name" id="fname" name="fname" required autocomplete="off" autofocus>
+                </div>
+                <div class="form_group">
+                    <input type="text" class="form_input" placeholder="Last name" id="lname" name="lname" required autocomplete="off">
+                </div>
+                <div class="form_group">
+                    <input type="email" class="form_input" placeholder="Email" id="email" name="email" required autocomplete="off">
+                </div>
+                <div class="form_group">
+                    <input type="tel" class="form_input" placeholder="Phone Number" id="phone" name="phone" required autocomplete="off">
+                </div>
+                <div class="form_group">
+                    <input type="password" class="form_input" placeholder="Password" id="password" name="password" required autocomplete="off">
+                </div>
+                <div class="form_group">
+                    <input type="password" class="form_input" placeholder="Confirm Password" id="cpassword" name="cpassword" required autocomplete="off">
+                </div>
+            </div>
+            <button type="submit" id="submitButton" class="btn btn--white btn--animated">Sign up</button>
+            <a href="/signin" class="" style="display: flex; justify-content: flex-start;">Already have an account?</a>
+        </div>
+    </form>
+</body>
+</html>

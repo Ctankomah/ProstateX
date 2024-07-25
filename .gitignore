@@ -1,3 +1,6 @@
 venv
 
 .DS_Store
+
+model-backend/app/prostatedata_extracted
+model-backend/app/models/*.pth

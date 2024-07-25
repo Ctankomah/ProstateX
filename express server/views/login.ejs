@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/contactStyles.css">
+    <link rel="shortcut icon" type="image/jpeg" href="img/prostate-icon-1.png">
+    <title>Sign in</title>
+</head>
+<body>
+    <% if (messages.error && messages.error.length > 0) { %>
+        <div class="flash-error">
+          <% messages.error.forEach(function(error) { %>
+            <p><%= error %></p>
+          <% }); %>
+        </div>
+      <% } %>
+    <form class="contact" method="post" action="/login">
+        <div class="contact__group login">
+            <div class="contact__form signin">
+                <h2 class="heading-secondary">
+                    ProstateX AI
+                </h2>
+                <div class="login_group">
+                    <input type="email" class="form_input" placeholder="Email" id="useremail" name="loginEmail" required autofocus autocomplete="on">
+                </div>
+                <div class="login_group">
+                    <input type="password" class="form_input" placeholder="Password" id="userpassword" name="loginPassword" required autocomplete="off">
+                </div>
+            </div>
+            <button type="submit" class="btn btn--white btn--animated">Sign in</button>
+            <p>_____ or _____</p>
+            <a href="/create" class="btn-login" style="display: block">Create an account</a>
+        </div>
+    </form>
+</body>
+</html>

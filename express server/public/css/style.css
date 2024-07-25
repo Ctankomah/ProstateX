@@ -1,0 +1,120 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;   
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+    padding: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: "Lato", sans-serif;
+}
+
+
+.welcome-page {
+    background-image: linear-gradient(to bottom,
+                         rgb(0, 173, 230, .75),
+                         rgb(26, 123, 204, .75)
+                         ),
+                         url(../img/prostate-bg-1.jpg);
+    background-size: contain;
+    background-position: top;
+    color: #eee;
+    padding: 2rem 3rem;
+    font-size: 3rem;
+    height: 100vh;
+    position: relative;
+}
+
+.welcome__heading .projectname {
+    color: #ffff1a;
+    color: #ff4d4d
+}
+
+.welcome-page__logo-box {
+    position: absolute;
+    top: 4rem;
+    left: 4rem;
+}
+
+.welcome-page__logo-box img {
+    height: 15.5rem;
+}
+.welcome-page__text-box {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-top: 15rem;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 70%;
+}
+.welcome-page__text-box > a {
+    display: block;
+    margin-top: 3rem;
+}
+.welcome-page__text-box .animatedText {
+    margin-top: 2rem;
+}
+
+.btn, .btn:link, .btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1.5rem 4rem;
+    font-size: 1.6rem;
+    display: inline-block;
+    border-radius: 10rem;
+    transition: all 0.2s;
+    position: relative;
+    border: none;
+    cursor: pointer;
+}
+.btn:hover {
+    transform: translateY(-0.3rem);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3);
+    background-color: #eee;
+    color: #777;
+}
+
+.btn--white {
+    background-color: #ff4d4d;
+    color: #eee;
+}
+.btn--animated {
+    animation: moveInButton .5s ease-out .75s;
+    animation-fill-mode: backwards;
+}
+.heading-secondary {
+    font-size: 3.5rem;
+    font-weight: 700;
+    display: inline-block;
+    background-image: linear-gradient(to right, #ff1a1a, #e60000);
+    -webkit-background-clip: text;
+    color:transparent;
+    letter-spacing: .2rem;
+    transition: all .2s;
+    &:hover {
+        transform: skewY(2deg) skewX(15deg) scale(1.1); 
+        text-shadow: .5rem 1rem 2rem rgba(0,0,0, .2);
+    }   
+}
+
+@keyframes moveInButton {
+    0% {
+        opacity: 0;
+        transform: translateY(3rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
