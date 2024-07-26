@@ -4,3 +4,6 @@ venv
 
 model-backend/app/prostatedata_extracted
 model-backend/app/models/*.pth
+model-backend/app/gradcam_images/
+model-backend/app/images.zip
+

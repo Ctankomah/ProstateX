@@ -216,10 +216,45 @@ async function sendToMLModel(filePath) {
     try {
       const response = await axios.post('http://127.0.0.1:5000/process-zip', formData, {
         headers: formData.getHeaders() 
-      });
-      console.log(response.data);
+      })
 
-          // Delete the file after successful upload
+      // create folder to store files
+      const imagesDir = path.join(__dirname, 'public/images');
+
+      // Ensure the directory exists
+        if (!fs.existsSync(imagesDir)) {
+            fs.mkdirSync(imagesDir);
+        }
+     const image_filenames = ['EfficientNetB0_gradcam.png', 'EfficientNetB1_gradcam.png', 'Original_T2W_Image_gradcam.png', 'ResNet50_gradcam.png']  
+      const EfficientNetB0_gradcam = await axios.get('http://127.0.0.1:5000/EfficientNetB0_gradcam')
+      saveImage(image_filenames[0],EfficientNetB0_gradcam.data,imagesDir)
+
+      const EfficientNetB1_gradcam = await axios.get('http://127.0.0.1:5000/EfficientNetB1_gradcam')
+      saveImage(image_filenames[1],EfficientNetB1_gradcam.data,imagesDir)
+
+      const Original_T2W_Image_gradcam = await axios.get('http://127.0.0.1:5000/Original_T2W_Image_gradcam')
+      saveImage(image_filenames[2],Original_T2W_Image_gradcam.data,imagesDir)
+
+      const ResNet50_gradcam = await axios.get('http://127.0.0.1:5000/ResNet50_gradcam')
+      saveImage(image_filenames[3],ResNet50_gradcam.data,imagesDir)
+
+      /**
+       * This is the structure of results and Prediction that is returned
+       * { results: 'Prostate MRI scan' }
+        {
+             predictions: {
+                EfficientNetB0: { label: 'Clinically Significant', probabilities: [Object] },
+                EfficientNetB1: { label: 'Clinically Insignificant', probabilities: [Object] },
+                Joint: { label: 'Clinically Insignificant', probabilities: [Object] },
+                ResNet50: { label: 'Clinically Insignificant', probabilities: [Object] }
+            }
+            }
+       */
+      const {results,predictions} = response.data
+      console.log({results});
+      console.log({predictions})
+
+    // Delete the file after successful upload
     fs.unlink(filePath, (err) => {
         if (err) {
           console.error(`Failed to delete file: ${err.message}`);
@@ -232,6 +267,11 @@ async function sendToMLModel(filePath) {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  function saveImage(imageName,imageData,imagesDir){
+    const imagePath = path.join(imagesDir, imageName);
+    fs.writeFileSync(imagePath, imageData);
   }
 
 

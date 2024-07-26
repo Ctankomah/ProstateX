@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,send_file
 import zipfile
 import os
+from zipfile import ZipFile
+
 from modelHandler.Prostate_classification import Prostate_Classification
 app = Flask(__name__)
 
@@ -23,7 +25,7 @@ def handleModels():
             print(f"\n{model_name} Prediction:")
             print(f"  Label: {prediction['label']}")
             print(f"  Probabilities: {prediction['probabilities']}")    
-
+    return result, predictions
 
 
 @app.route('/')
@@ -64,8 +66,40 @@ def process_zip():
         return jsonify({'error': 'Invalid zip file'}), 400
     except Exception as e:
         return jsonify({'error': f'Failed to unzip file: {str(e)}'}), 500
-    handleModels()
-    return jsonify({'message': 'File uploaded and unzipped successfully'}), 200
+    results,predictions=handleModels()
+    getGradcamImagesAsZip()
+    return jsonify({'message': 'File uploaded and unzipped successfully','predictions':predictions,'results':results}), 200
+
+
+
+def getGradcamImagesAsZip():
+    image_dir = 'gradcam_images' 
+    image_filenames = ['EfficientNetB0_gradcam.png', 'EfficientNetB1_gradcam.png', 'Original_T2W_Image_gradcam.png', 'ResNet50_gradcam.png']  
+    zip_filename = 'images.zip'
+    with ZipFile(zip_filename, 'w') as zip_file:
+        for filename in image_filenames:
+            zip_file.write(os.path.join(image_dir, filename), filename)
+    return zip_filename
+
+
+@app.route('/EfficientNetB0_gradcam')
+def EfficientNetB0_gradcam():
+    return send_file("gradcam_images/EfficientNetB0_gradcam.png", mimetype='image/png')
+
+@app.route('/EfficientNetB1_gradcam')
+def EfficientNetB1_gradcam():
+    return send_file("gradcam_images/EfficientNetB1_gradcam.png", mimetype='image/png')
+
+@app.route('/Original_T2W_Image_gradcam')
+def Original_T2W_Image_gradcam():
+    return send_file("gradcam_images/Original_T2W_Image_gradcam.png", mimetype='image/png')
+
+@app.route('/ResNet50_gradcam')
+def ResNet50_gradcam():
+    return send_file("gradcam_images/ResNet50_gradcam.png", mimetype='image/png')
+
+
+
 
 
 if __name__ == '__main__':

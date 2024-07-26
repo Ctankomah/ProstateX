@@ -197,6 +197,16 @@ class Prostate_Classification:
         gradcam = gradcam / gradcam.max()
 
         return gradcam
+    
+    def saveGradcam_images(self,image,model_name):
+            # Convert the image to a format suitable for saving
+            image_img_uint8 = np.uint8(255 * image)
+            # Define the directory to save the images
+            save_dir = 'gradcam_images'
+            os.makedirs(save_dir, exist_ok=True)
+            # save images
+            save_path = os.path.join(save_dir, f'{model_name}_gradcam.png')
+            cv2.imwrite(save_path, image_img_uint8)
 
     def visualize_gradcam(self, preprocessed_images):
         # Select the middle image from preprocessed_images
@@ -217,6 +227,9 @@ class Prostate_Classification:
         axes[0].imshow(original_image, cmap='gray')
         axes[0].set_title('Original T2W Image')
         axes[0].axis('off')
+
+
+        self.saveGradcam_images(original_image,"Original_T2W_Image")
 
         # Generate and display Grad-CAM for each model
         for i, (model_name, model) in enumerate(self.models.items(), start=1):
@@ -239,13 +252,14 @@ class Prostate_Classification:
             # Overlay the heatmap on original image
             superimposed_img = gradcam_heatmap * 0.4 + original_image[:,:,np.newaxis]
             superimposed_img = superimposed_img / np.max(superimposed_img)
-
+            self.saveGradcam_images(superimposed_img,model_name)
             axes[i].imshow(superimposed_img)
             axes[i].set_title(f'{model_name} Grad-CAM')
             axes[i].axis('off')
 
         plt.tight_layout()
         plt.show()
+
 
     def run_pipeline(self, t2w_folder, adc_folder, bval_folder):
         preprocessed_images = self.preprocess(t2w_folder, adc_folder, bval_folder)
