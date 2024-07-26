@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/results.css">
+    <link rel="shortcut icon" type="image/jpeg" href="img/prostate-icon-1.png">
+    <title>ProstateXAI Results</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="patient-info">
+                <div>Patient Name: <span id="patientName"><%= patientName %></span></div>
+                <div>Patient ID: <span id="patientID"><%= patientID %></span></div>
+                <div>Gender: <span id="gender"><%= gender %></span></div>
+                <div>Date processed: <span id="dateProcessed"><%= dateProcessed %></span></div>
+            </div>
+            <div class="buttons">
+                <button id="downloadReport">Download Report</button>
+                <button id="history">History</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="images">
+                <% images.forEach(function(image, index) { %>
+                    <img src="<%= image %>" alt="MRI Image <%= index + 1 %>" class="mri-image">
+                <% }); %>
+            </div>
+            <div class="results">
+                <h2>RESULTS</h2>
+                <% Object.keys(results).forEach(function(model) { %>
+                    <div class="result">
+                        <span><%= model %></span>
+                        <div class="progress-bar">
+                            <% var widthStyle0 = `${results[model]}%`; %>
+                            <div class="progress significant" style="width: <%= widthStyle0 %>;">
+                                <%= results[model] %>%
+                            </div>
+                        </div>
+                        <div class="progress-bar" style="margin-top: 10px;">
+                            <% var widthStyle1 = `${results[model]}%`; %>
+                            <div class="progress significant" style="width: <%= widthStyle1 %>;">
+                                <%= results[model] %>%
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <div class="footer">
+            <button id="visualize">Visualize</button>
+            <button id="rescan">Rescan</button>
+            <button id="logout">Log Out</button>
+        </div>
+    </div>
+    <script src="/scripts.js"></script>
+</body>
+</html>

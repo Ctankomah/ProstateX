@@ -67,6 +67,9 @@ def process_zip():
     except Exception as e:
         return jsonify({'error': f'Failed to unzip file: {str(e)}'}), 500
     results,predictions=handleModels()
+    print("#####")
+    print(predictions)
+    print(results)
     getGradcamImagesAsZip()
     return jsonify({'message': 'File uploaded and unzipped successfully','predictions':predictions,'results':results}), 200
 

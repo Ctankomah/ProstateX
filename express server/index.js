@@ -199,11 +199,19 @@ app.post("/scan", upload.single('zipFile'), async (req, res) => {
     }
 
     const filePath = path.join(__dirname, req.file.path);
-    console.log(filePath)
     try {
         // Send the zip file to the ML model
         const response = await sendToMLModel(filePath);
-        res.send(`File uploaded and processed successfully. ML model response: ${response.data}`);
+        const dataToRender = {
+            patientID,
+            patientName,
+            gender,
+            dateProcessed: new Date().toLocaleDateString(),
+            images: response.images,   // Images coming from ML server
+            results: response.model_results  // Percentages, model prediction
+        }
+        console.log(response)
+        res.render("results.ejs", dataToRender);
     } catch (error) {
         res.status(500).send(`Error processing with ML model: ${error.message}`);
     }
@@ -212,11 +220,16 @@ app.post("/scan", upload.single('zipFile'), async (req, res) => {
 async function sendToMLModel(filePath) {
     const formData = new FormData();
     formData.append('zipfile', fs.createReadStream(filePath));
+
   
     try {
       const response = await axios.post('http://127.0.0.1:5000/process-zip', formData, {
         headers: formData.getHeaders() 
       })
+
+      const {results,predictions} = response.data
+     
+
 
       // create folder to store files
       const imagesDir = path.join(__dirname, 'public/images');
@@ -250,9 +263,6 @@ async function sendToMLModel(filePath) {
             }
             }
        */
-      const {results,predictions} = response.data
-      console.log({results});
-      console.log({predictions})
 
     // Delete the file after successful upload
     fs.unlink(filePath, (err) => {
@@ -263,7 +273,18 @@ async function sendToMLModel(filePath) {
         }
       });
 
-      return response.data; 
+      const image_paths = ['images/EfficientNetB0_gradcam.png', 'images/EfficientNetB1_gradcam.png', 'images/Original_T2W_Image_gradcam.png', 'images/ResNet50_gradcam.png']  
+      const models = ["EfficientNetB0","EfficientNetB1","Joint","ResNet50"]
+
+      const model_results = {
+        "EfficientNetB0": [predictions["EfficientNetB0"].probabilities["Clinically Insignificant"],predictions["EfficientNetB0"].probabilities["Clinically Significant"]]
+      }
+      const data ={
+        images: image_paths,
+        model_results: model_results,
+      }
+
+      return data; 
     } catch (error) {
       console.error(error);
     }
