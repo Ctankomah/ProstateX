@@ -11,6 +11,7 @@
 </head>
 <body>
     <div class="container">
+        <h2 style="margin: 0 auto; width: 60%;; font-weight: 900; color: darkorange;">ProstateX AI Scan Analysis</h2>
         <div class="header">
             <div class="patient-info">
                 <div>Patient Name: <span id="patientName"><%= patientName %></span></div>
@@ -20,14 +21,17 @@
             </div>
             <div class="buttons">
                 <button id="downloadReport" onclick="window.print()" style="width: fit-content;padding: 10px;">Download Report</button>
+                <button id="logout" onclick="window.location.href = '/signin'" style="width: fit-content;padding: 10px; background-color: darkorange;">Logout</button>
             </div>
+  
         </div>
         <div class="images" style="width: fit-content;">
            <strong>Original Scan</strong> 
             <img src="<%= original_image %>" alt="MRI Image origina class="mri-image">
 
         </div>
-    </div>
+   
+    <h2>RESULTS</h2>
         <div >
         
             <% Object.keys(results).forEach(function(model) { %>
@@ -39,7 +43,6 @@
                     
                     </div>
             <div class="results">
-                <h2>RESULTS</h2>
                     <div class="result">
                         <h4><%= model %></h4>
                         <div class="progress-bar">
@@ -68,6 +71,7 @@
             <button id="rescan" onclick="window.location.href = '/upload'">Rescan</button>
         </div>
     </div>
+</div>
     <script src="/scripts.js">
         console.log(results)
     </script>
