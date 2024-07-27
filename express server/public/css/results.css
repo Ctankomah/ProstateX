@@ -87,8 +87,12 @@ body {
     color: white;
 }
 
-.significant {
+.insignificant {
     background-color: orange;
+}
+
+.significant {
+    background-color: rgb(205, 45, 9);
 }
 
 .footer {

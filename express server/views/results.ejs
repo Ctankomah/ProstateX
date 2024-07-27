@@ -31,17 +31,17 @@
                 <h2>RESULTS</h2>
                 <% Object.keys(results).forEach(function(model) { %>
                     <div class="result">
-                        <span><%= model %></span>
+                        <h4><%= model %></h4>
                         <div class="progress-bar">
-                            <% var widthStyle0 = `${results[model]}%`; %>
+                            <% var widthStyle0 = `${results[model][0]}`; %>
                             <div class="progress significant" style="width: <%= widthStyle0 %>;">
-                                <%= results[model] %>%
+                               Significant <%= widthStyle0 %>
                             </div>
                         </div>
                         <div class="progress-bar" style="margin-top: 10px;">
-                            <% var widthStyle1 = `${results[model]}%`; %>
-                            <div class="progress significant" style="width: <%= widthStyle1 %>;">
-                                <%= results[model] %>%
+                            <% var widthStyle1 = `${results[model][1]}`; %>
+                            <div class="progress insignificant" style="width: <%= widthStyle1 %>;">
+                              Insignificant  <%= widthStyle1 %>
                             </div>
                         </div>
                     </div>
@@ -54,6 +54,8 @@
             <button id="logout">Log Out</button>
         </div>
     </div>
-    <script src="/scripts.js"></script>
+    <script src="/scripts.js">
+        console.log(results)
+    </script>
 </body>
 </html>

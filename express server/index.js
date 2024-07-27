@@ -277,8 +277,11 @@ async function sendToMLModel(filePath) {
       const models = ["EfficientNetB0","EfficientNetB1","Joint","ResNet50"]
 
       const model_results = {
-        "EfficientNetB0": [predictions["EfficientNetB0"].probabilities["Clinically Insignificant"],predictions["EfficientNetB0"].probabilities["Clinically Significant"]]
-      }
+        "EfficientNetB0": [predictions["EfficientNetB0"].probabilities["Clinically Insignificant"],predictions["EfficientNetB0"].probabilities["Clinically Significant"]],
+        "EfficientNetB1": [predictions["EfficientNetB1"].probabilities["Clinically Insignificant"],predictions["EfficientNetB1"].probabilities["Clinically Significant"]],
+        "ResNet50": [predictions["ResNet50"].probabilities["Clinically Insignificant"],predictions["ResNet50"].probabilities["Clinically Significant"]],
+        "Joint": [predictions["Joint"].probabilities["Clinically Insignificant"],predictions["Joint"].probabilities["Clinically Significant"]],
+    }
       const data ={
         images: image_paths,
         model_results: model_results,
