@@ -19,7 +19,7 @@
                 <div>Date processed: <span id="dateProcessed"><%= dateProcessed %></span></div>
             </div>
             <div class="buttons">
-                <button id="downloadReport" onclick="window.print()">Download Report</button>
+                <button id="downloadReport" onclick="window.print()" style="width: fit-content;padding: 10px;">Download Report</button>
             </div>
         </div>
         <div class="images" style="width: fit-content;">
@@ -65,9 +65,7 @@
           <% }); %>
         </div>
         <div class="footer">
-            <button id="visualize">Visualize</button>
             <button id="rescan" onclick="window.location.href = '/upload'">Rescan</button>
-            <button id="logout">Log Out</button>
         </div>
     </div>
     <script src="/scripts.js">
