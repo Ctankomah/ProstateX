@@ -42,6 +42,7 @@ body {
 .content {
     display: flex;
     gap: 20px;
+    margin: 20px;
 }
 
 .images {
@@ -51,8 +52,44 @@ body {
     gap: 10px;
 }
 
+
+@media print {
+    /* All your print styles go here */
+    
+    .progress-bar {
+        width: 100%;
+        background-color: #ccc;
+        position: relative;
+        height: 20px;
+        border-radius: 5px;
+        overflow: hidden;
+        -webkit-print-color-adjust:exact;
+    }
+    
+    .progress {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        text-align: center;
+        line-height: 20px;
+        color: white;
+        -webkit-print-color-adjust:exact;
+    }
+    
+    .insignificant {
+        background-color: orange;
+        -webkit-print-color-adjust:exact;
+    }
+    
+    .significant {
+        background-color: rgb(205, 45, 9);
+        -webkit-print-color-adjust:exact;
+    }
+ }
+
 .mri-image {
-    width: 100%;
+    width: 300px;
     height: auto;
 }
 

@@ -207,7 +207,7 @@ app.post("/scan", upload.single('zipFile'), async (req, res) => {
             patientName,
             gender,
             dateProcessed: new Date().toLocaleDateString(),
-            images: response.images,   // Images coming from ML server
+            original_image: response.original_image,   // Images coming from ML server
             results: response.model_results  // Percentages, model prediction
         }
         console.log(response)
@@ -239,16 +239,25 @@ async function sendToMLModel(filePath) {
             fs.mkdirSync(imagesDir);
         }
      const image_filenames = ['EfficientNetB0_gradcam.png', 'EfficientNetB1_gradcam.png', 'Original_T2W_Image_gradcam.png', 'ResNet50_gradcam.png']  
-      const EfficientNetB0_gradcam = await axios.get('http://127.0.0.1:5000/EfficientNetB0_gradcam')
+      const EfficientNetB0_gradcam = await axios.get('http://127.0.0.1:5000/EfficientNetB0_gradcam', {
+        responseType: 'arraybuffer' // Use 'arraybuffer' to receive binary data
+    })
+      console.log({image: EfficientNetB0_gradcam.data})
       saveImage(image_filenames[0],EfficientNetB0_gradcam.data,imagesDir)
 
-      const EfficientNetB1_gradcam = await axios.get('http://127.0.0.1:5000/EfficientNetB1_gradcam')
+      const EfficientNetB1_gradcam = await axios.get('http://127.0.0.1:5000/EfficientNetB1_gradcam', {
+        responseType: 'arraybuffer' // Use 'arraybuffer' to receive binary data
+    })
       saveImage(image_filenames[1],EfficientNetB1_gradcam.data,imagesDir)
 
-      const Original_T2W_Image_gradcam = await axios.get('http://127.0.0.1:5000/Original_T2W_Image_gradcam')
+      const Original_T2W_Image_gradcam = await axios.get('http://127.0.0.1:5000/Original_T2W_Image_gradcam', {
+        responseType: 'arraybuffer' // Use 'arraybuffer' to receive binary data
+    })
       saveImage(image_filenames[2],Original_T2W_Image_gradcam.data,imagesDir)
 
-      const ResNet50_gradcam = await axios.get('http://127.0.0.1:5000/ResNet50_gradcam')
+      const ResNet50_gradcam = await axios.get('http://127.0.0.1:5000/ResNet50_gradcam', {
+        responseType: 'arraybuffer' // Use 'arraybuffer' to receive binary data
+    })
       saveImage(image_filenames[3],ResNet50_gradcam.data,imagesDir)
 
       /**
@@ -273,17 +282,16 @@ async function sendToMLModel(filePath) {
         }
       });
 
-      const image_paths = ['images/EfficientNetB0_gradcam.png', 'images/EfficientNetB1_gradcam.png', 'images/Original_T2W_Image_gradcam.png', 'images/ResNet50_gradcam.png']  
-      const models = ["EfficientNetB0","EfficientNetB1","Joint","ResNet50"]
+      const image_paths = ['images/EfficientNetB0_gradcam.png', 'images/EfficientNetB1_gradcam.png', 'images/ResNet50_gradcam.png', 'images/Original_T2W_Image_gradcam.png']  
 
       const model_results = {
-        "EfficientNetB0": [predictions["EfficientNetB0"].probabilities["Clinically Insignificant"],predictions["EfficientNetB0"].probabilities["Clinically Significant"]],
-        "EfficientNetB1": [predictions["EfficientNetB1"].probabilities["Clinically Insignificant"],predictions["EfficientNetB1"].probabilities["Clinically Significant"]],
-        "ResNet50": [predictions["ResNet50"].probabilities["Clinically Insignificant"],predictions["ResNet50"].probabilities["Clinically Significant"]],
-        "Joint": [predictions["Joint"].probabilities["Clinically Insignificant"],predictions["Joint"].probabilities["Clinically Significant"]],
+        "EfficientNetB0":{"predictions": [predictions["EfficientNetB0"].probabilities["Clinically Insignificant"],predictions["EfficientNetB0"].probabilities["Clinically Significant"]],image:image_paths[0]},
+        "EfficientNetB1": {"predictions":[predictions["EfficientNetB1"].probabilities["Clinically Insignificant"],predictions["EfficientNetB1"].probabilities["Clinically Significant"]],image:image_paths[1]},
+        "ResNet50":{"predictions": [predictions["ResNet50"].probabilities["Clinically Insignificant"],predictions["ResNet50"].probabilities["Clinically Significant"]],image:image_paths[2]},
+        "Joint": {"predictions":[predictions["Joint"].probabilities["Clinically Insignificant"],predictions["Joint"].probabilities["Clinically Significant"]],image:"/"},
     }
       const data ={
-        images: image_paths,
+        original_image: image_paths[3],
         model_results: model_results,
       }
 
@@ -294,8 +302,22 @@ async function sendToMLModel(filePath) {
   }
 
   function saveImage(imageName,imageData,imagesDir){
-    const imagePath = path.join(imagesDir, imageName);
-    fs.writeFileSync(imagePath, imageData);
+        // Ensure imagesDir exists
+        if (!fs.existsSync(imagesDir)) {
+            console.error(`Directory does not exist: ${imagesDir}`);
+            return;
+        }
+    
+        // Resolve the image path
+        const imagePath = path.join(imagesDir, imageName);
+    
+    try {
+        // Write the image data to a file
+        fs.writeFileSync(imagePath, imageData, 'binary');
+        console.log(`Image saved successfully: ${imagePath}`);
+    } catch (error) {
+        console.error(`Error saving image: ${error.message}`);
+    }
   }
 
 

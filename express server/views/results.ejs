@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
     <link rel="stylesheet" href="css/results.css">
+    <link rel="stylesheet" type="text/css" media="print" href="results.css">
+
     <link rel="shortcut icon" type="image/jpeg" href="img/prostate-icon-1.png">
     <title>ProstateXAI Results</title>
 </head>
@@ -17,40 +19,54 @@
                 <div>Date processed: <span id="dateProcessed"><%= dateProcessed %></span></div>
             </div>
             <div class="buttons">
-                <button id="downloadReport">Download Report</button>
-                <button id="history">History</button>
+                <button id="downloadReport" onclick="window.print()">Download Report</button>
             </div>
         </div>
-        <div class="content">
-            <div class="images">
-                <% images.forEach(function(image, index) { %>
-                    <img src="<%= image %>" alt="MRI Image <%= index + 1 %>" class="mri-image">
-                <% }); %>
-            </div>
+        <div class="images" style="width: fit-content;">
+           <strong>Original Scan</strong> 
+            <img src="<%= original_image %>" alt="MRI Image origina class="mri-image">
+
+        </div>
+    </div>
+        <div >
+        
+            <% Object.keys(results).forEach(function(model) { %>
+                <div class="content">
+                    <div class="images">
+                        <% if (results[model]["image"]!="/") { %>
+                            <img src="<%= results[model]["image"] %>" alt="MRI Image <%= model %>" class="mri-image">
+                        <% }  %>
+                    
+                    </div>
             <div class="results">
                 <h2>RESULTS</h2>
-                <% Object.keys(results).forEach(function(model) { %>
                     <div class="result">
                         <h4><%= model %></h4>
                         <div class="progress-bar">
-                            <% var widthStyle0 = `${results[model][0]}`; %>
+
+                            <% console.log(results[model]["predictions"]) %>
+                            <% var widthStyle0 = `${results[model]["predictions"][0]}`; %>
                             <div class="progress significant" style="width: <%= widthStyle0 %>;">
                                Significant <%= widthStyle0 %>
                             </div>
                         </div>
                         <div class="progress-bar" style="margin-top: 10px;">
-                            <% var widthStyle1 = `${results[model][1]}`; %>
+                            <% var widthStyle1 = `${results[model]["predictions"][1]}`; %>
                             <div class="progress insignificant" style="width: <%= widthStyle1 %>;">
                               Insignificant  <%= widthStyle1 %>
                             </div>
                         </div>
                     </div>
-                <% }); %>
+               
             </div>
+
+           
+          </div>
+          <% }); %>
         </div>
         <div class="footer">
             <button id="visualize">Visualize</button>
-            <button id="rescan">Rescan</button>
+            <button id="rescan" onclick="window.location.href = '/upload'">Rescan</button>
             <button id="logout">Log Out</button>
         </div>
     </div>
