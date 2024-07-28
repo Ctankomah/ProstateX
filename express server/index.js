@@ -208,7 +208,9 @@ app.post("/scan", upload.single('zipFile'), async (req, res) => {
             gender,
             dateProcessed: new Date().toLocaleDateString(),
             original_image: response.original_image,   // Images coming from ML server
-            results: response.model_results  // Percentages, model prediction
+            results: response.model_results , // Percentages, model prediction,
+            isInvalidData: response.isInvalidData,
+            invalidData: response.invalidData
         }
         console.log(response)
         res.render("results.ejs", dataToRender);
@@ -229,6 +231,18 @@ async function sendToMLModel(filePath) {
 
       const {results,predictions} = response.data
      
+      let data ={}
+      let isInvalidData = false
+      if (!results.includes( "Prostate MRI scan")) {
+        isInvalidData = true
+        console.log("I runnn")
+       return {
+            original_image: null,
+            model_results: [],
+            isInvalidData,
+            invalidData: results
+          }
+      }
 
 
       // create folder to store files
@@ -290,9 +304,11 @@ async function sendToMLModel(filePath) {
         "ResNet50":{"predictions": [predictions["ResNet50"].probabilities["Clinically Insignificant"],predictions["ResNet50"].probabilities["Clinically Significant"]],image:image_paths[2]},
         "Joint": {"predictions":[predictions["Joint"].probabilities["Clinically Insignificant"],predictions["Joint"].probabilities["Clinically Significant"]],image:"/"},
     }
-      const data ={
+       data ={
         original_image: image_paths[3],
         model_results: model_results,
+        isInvalidData,
+        invalidData: null
       }
 
       return data; 

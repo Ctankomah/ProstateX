@@ -2,9 +2,24 @@ from flask import Flask, request, jsonify,send_file
 import zipfile
 import os
 from zipfile import ZipFile
+import shutil
+
 
 from modelHandler.Prostate_classification import Prostate_Classification
 app = Flask(__name__)
+
+def find_missing_subfolders(parent, main_folder, expected_subfolders):
+    main_folder = os.path.join(parent, main_folder)
+    
+    if os.path.exists(main_folder):
+        actual_subfolders = os.listdir(main_folder)
+        missing_subfolders = [f for f in expected_subfolders if f not in actual_subfolders]
+        return missing_subfolders
+    else:
+        return expected_subfolders
+    
+
+
 
 
 def handleModels():
@@ -14,11 +29,31 @@ def handleModels():
     efficientnet_b1_path='./models/EfficientNetB1-Model.pth',
     resnet50_path='./models/ResNet50-Model.pth'
     )
+    main_folder = "prostatedata_extracted"
+
+    for sub in os.listdir(main_folder):
+        if sub != "prostatedata":
+            shutil.rmtree(main_folder+"/"+sub)
+
+    
+    subfolders_to_check = ["bval", "t2", "adc"]
+    main_folder= main_folder+"/prostatedata"
+    missing_folders = find_missing_subfolders(os.getcwd(),main_folder, subfolders_to_check)
+
+    if missing_folders:
+        return f"Not a prostate MRI scans",None
+    else:
+        print("All required folders exist")
+
     result,predictions = pipeline.run_pipeline(
         './prostatedata_extracted/prostatedata/t2',
         './prostatedata_extracted/prostatedata/adc',
         './prostatedata_extracted/prostatedata/bval'
     )
+
+    shutil.rmtree("prostatedata_extracted")
+
+
     print("Result:", result)
     if predictions:
         for model_name, prediction in predictions.items():

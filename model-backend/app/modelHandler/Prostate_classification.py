@@ -201,6 +201,8 @@ class Prostate_Classification:
     def saveGradcam_images(self,image,model_name):
             # Convert the image to a format suitable for saving
             image_img_uint8 = np.uint8(255 * image)
+            print("####")
+            print(image_img_uint8)
             # Define the directory to save the images
             save_dir = 'gradcam_images'
             os.makedirs(save_dir, exist_ok=True)
@@ -262,10 +264,17 @@ class Prostate_Classification:
 
 
     def run_pipeline(self, t2w_folder, adc_folder, bval_folder):
+        
         preprocessed_images = self.preprocess(t2w_folder, adc_folder, bval_folder)
 
         if preprocessed_images is None:
             return "Error during preprocessing", None
+        
+        # First, use the image classifier to determine if it's a prostate MRI scan
+        is_prostate_mri = self.classify_prostate_mri(preprocessed_images)
+
+        if not is_prostate_mri:
+            return "Not a prostate MRI scan", None
 
         is_prostate_mri = self.classify_prostate_mri(preprocessed_images)
 

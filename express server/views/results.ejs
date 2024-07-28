@@ -25,11 +25,13 @@
             </div>
   
         </div>
-        <div class="images" style="width: fit-content;">
-           <strong>Original Scan</strong> 
-            <img src="<%= original_image %>" alt="MRI Image origina class="mri-image">
+        <% if (!isInvalidData) { %>
+            <div class="images" style="width: fit-content;">
+                <strong>Original Scan</strong> 
+                 <img src="<%= original_image %>" alt="MRI Image origina class="mri-image">
+             </div>        
+             
 
-        </div>
    
     <h2>RESULTS</h2>
         <div >
@@ -67,6 +69,10 @@
           </div>
           <% }); %>
         </div>
+        <% }  %>
+        <h3 class="content">
+            Invalid Upload: <span><%= invalidData %></span>
+        </h3>
         <div class="footer">
             <button id="rescan" onclick="window.location.href = '/upload'">Rescan</button>
         </div>
