@@ -16,6 +16,8 @@ def containsOnlyFolders(directory):
         # Check if all entries are directories
         for entry in entries:
             if not os.path.isdir(os.path.join(directory, entry)):
+                shutil.rmtree("prostatedata_extracted")
+
                 return False
                 
         return True
@@ -30,6 +32,7 @@ def find_missing_subfolders(parent, main_folder, expected_subfolders):
     if (os.path.exists(main_folder) and containsOnlyFolders(main_folder)):
         actual_subfolders = os.listdir(main_folder)
         missing_subfolders = [f for f in expected_subfolders if f not in actual_subfolders]
+        shutil.rmtree("prostatedata_extracted")
         return missing_subfolders
     else:
         return expected_subfolders
@@ -49,7 +52,15 @@ def handleModels():
 
     for sub in os.listdir(main_folder):
         if sub != "prostatedata":
-            shutil.rmtree(main_folder+"/"+sub)
+            if os.path.exists(main_folder+"/"+sub) and os.path.isdir(main_folder+"/"+sub):
+                shutil.rmtree(main_folder+"/"+sub)
+                print(f"Directory '{main_folder+"/"+sub}' has been deleted.")
+            else:
+                print(f"Directory '{main_folder+"/"+sub}' does not exist or is not a directory.")
+                shutil.rmtree("prostatedata_extracted")
+                return f"Not a prostate MRI scans",None
+
+            
 
     
     subfolders_to_check = ["bval", "t2", "adc"]
