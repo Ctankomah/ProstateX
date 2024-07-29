@@ -8,6 +8,24 @@ import shutil
 from modelHandler.Prostate_classification import Prostate_Classification
 app = Flask(__name__)
 
+def remove_non_folders(directory):
+    try:
+        # List all entries in the directory
+        entries = os.listdir(directory)
+        print(entries,"hellloooooo")
+        # Iterate over each entry
+        for entry in entries:
+            entry_path = os.path.join(directory, entry)
+            
+            # Check if the entry is not a directory
+            if not os.path.isdir(entry_path):
+                os.remove(entry_path)
+                print(f"Removed file: {entry_path}")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
 def containsOnlyFolders(directory):
     try:
         # List all entries in the directory
@@ -17,7 +35,6 @@ def containsOnlyFolders(directory):
         for entry in entries:
             if not os.path.isdir(os.path.join(directory, entry)):
                 shutil.rmtree("prostatedata_extracted")
-
                 return False
                 
         return True
@@ -28,11 +45,9 @@ def containsOnlyFolders(directory):
 
 def find_missing_subfolders(parent, main_folder, expected_subfolders):
     main_folder = os.path.join(parent, main_folder)
-    
     if (os.path.exists(main_folder) and containsOnlyFolders(main_folder)):
         actual_subfolders = os.listdir(main_folder)
         missing_subfolders = [f for f in expected_subfolders if f not in actual_subfolders]
-        shutil.rmtree("prostatedata_extracted")
         return missing_subfolders
     else:
         return expected_subfolders
@@ -52,6 +67,7 @@ def handleModels():
 
     for sub in os.listdir(main_folder):
         if sub != "prostatedata":
+            remove_non_folders(main_folder)
             if os.path.exists(main_folder+"/"+sub) and os.path.isdir(main_folder+"/"+sub):
                 shutil.rmtree(main_folder+"/"+sub)
                 print(f"Directory '{main_folder+"/"+sub}' has been deleted.")
@@ -59,14 +75,13 @@ def handleModels():
                 print(f"Directory '{main_folder+"/"+sub}' does not exist or is not a directory.")
                 shutil.rmtree("prostatedata_extracted")
                 return f"Not a prostate MRI scans",None
+        else:
+            remove_non_folders(main_folder+"/prostatedata")
 
-            
-
-    
+        
     subfolders_to_check = ["bval", "t2", "adc"]
     main_folder= main_folder+"/prostatedata"
     missing_folders = find_missing_subfolders(os.getcwd(),main_folder, subfolders_to_check)
-
     if missing_folders:
         return f"Not prostate MRI scans",None
     else:
