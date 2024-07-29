@@ -74,7 +74,7 @@ def handleModels():
             else:
                 print(f"Directory '{main_folder+"/"+sub}' does not exist or is not a directory.")
                 shutil.rmtree("prostatedata_extracted")
-                return f"Not a prostate MRI scans",None
+                return f"Not valid prostate MRI scans",None
         else:
             remove_non_folders(main_folder+"/prostatedata")
 
@@ -83,7 +83,7 @@ def handleModels():
     main_folder= main_folder+"/prostatedata"
     missing_folders = find_missing_subfolders(os.getcwd(),main_folder, subfolders_to_check)
     if missing_folders:
-        return f"Not prostate MRI scans",None
+        return f"Not valid prostate MRI scans",None
     else:
         print("All required folders exist")
 
