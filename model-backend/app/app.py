@@ -68,7 +68,7 @@ def handleModels():
     missing_folders = find_missing_subfolders(os.getcwd(),main_folder, subfolders_to_check)
 
     if missing_folders:
-        return f"Not a prostate MRI scans",None
+        return f"Not prostate MRI scans",None
     else:
         print("All required folders exist")
 
