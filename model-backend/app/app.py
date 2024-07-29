@@ -8,10 +8,26 @@ import shutil
 from modelHandler.Prostate_classification import Prostate_Classification
 app = Flask(__name__)
 
+def containsOnlyFolders(directory):
+    try:
+        # List all entries in the directory
+        entries = os.listdir(directory)
+        
+        # Check if all entries are directories
+        for entry in entries:
+            if not os.path.isdir(os.path.join(directory, entry)):
+                return False
+                
+        return True
+
+    except Exception as e:
+        print(f"Other Files contained in directory: {e}")
+        return False
+
 def find_missing_subfolders(parent, main_folder, expected_subfolders):
     main_folder = os.path.join(parent, main_folder)
     
-    if os.path.exists(main_folder):
+    if (os.path.exists(main_folder) and containsOnlyFolders(main_folder)):
         actual_subfolders = os.listdir(main_folder)
         missing_subfolders = [f for f in expected_subfolders if f not in actual_subfolders]
         return missing_subfolders
