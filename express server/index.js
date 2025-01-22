@@ -24,7 +24,7 @@ const db = new pg.Client({
     user: "postgres",
     host: "localhost",
     database: "prostateXAI",
-    password: "xbsb435&",
+    password: "claudia123",
     port: 5432,
 });
 
@@ -33,7 +33,7 @@ const createTableQuery = `
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL ,
     phone_number VARCHAR(50),
     password VARCHAR(255) NOT NULL
   );
