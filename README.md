@@ -1,5 +1,7 @@
 ## prostate-xai
-This contains all code related to prostate ai
+This contains all code related to ProstateX AI, an ensemble of deep learning models for prostate cancer classification.
+
+NB: You need to have Node JS and pgAdmin installed. 
 
 
  ## Express Server
